@@ -46,6 +46,34 @@ Estruture como: `DESCOBRIR → PLANEJAR → EXECUTAR → VERIFICAR → ITERAR`, 
 
 Depois que uma rodada completa do loop funcionou supervisionada, agende (cron, /schedule, CI). Nunca agende um loop que nunca completou uma rodada com sucesso.
 
+## Heartbeat inteligente — o gatilho segue o raio de impacto
+
+O heartbeat pode ser **cron** (de tempo em tempo) ou **evento** (quando algo acontece). "Rodar em todo commit" é heartbeat cego: a maioria dos commits nem toca a área que a barreira protege, então você paga lento/caro/ruidoso à toa. A regra melhor:
+
+> **Dispare a guarda quando — e só quando — uma mudança consegue plausivelmente quebrar a invariante que ela protege.**
+
+Toda barreira protege uma **invariante** (algo que tem de ser sempre verdade). Para escopar o gatilho de forma genérica, declare 3 coisas por invariante:
+
+1. **Invariante** — a frase do que não pode quebrar (ex.: "squad A nunca vê documento de squad B").
+2. **Raio de impacto** — os arquivos/módulos que, se mudarem, podem quebrá-la.
+3. **Guarda** — o teste objetivo.
+
+O gatilho vira mecânico: *os arquivos que mudaram cruzam com o raio de impacto? Rode a guarda.* Dois jeitos de implementar o "cruzou":
+- **Explícito**: path filters no CI (GitHub Actions `paths:`, GitLab `rules:changes`). Você mantém os globs.
+- **Automático**: ferramentas de test-impact / affected graph (nx affected, `jest --findRelatedTests`, pytest-testmon, bazel) descobrem sozinhas quais testes dependem do que mudou.
+
+**Escopo por caminho pode escapar** (uma mudança num util compartilhado quebra a invariante sem tocar o glob esperado). Por isso, use 3 camadas em vez de uma:
+
+| Camada | O que roda | Quando |
+|---|---|---|
+| Rápida | testes baratos | todo commit |
+| Escopada | a guarda sensível | quando o raio de impacto é tocado |
+| Rede de segurança | suíte completa | toda noite / antes de release |
+
+**Teste vs. loop** — distinção que decide o quanto de autonomia dar:
+- Gatilho roda o teste e **um humano conserta** se falhar → é só CI esperto, não precisa de agente. Prefira isso para invariantes sensíveis (segurança, isolamento de dados, migrações) — você não quer um agente mexendo sozinho ali.
+- Gatilho roda o teste e **um agente conserta sozinho** até passar → aí sim é build-loop com heartbeat por evento. Reserve para tarefas mecânicas e chatas (formatação, deps, snapshots).
+
 ## Métrica de sucesso e armadilhas
 
 - **Métrica**: custo por mudança ACEITA. Se menos de ~50% do que o loop produz é aceito, você está fazendo o trabalho de revisão que o loop deveria eliminar — desligue e melhore a barreira.
