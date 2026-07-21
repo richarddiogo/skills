@@ -8,6 +8,7 @@ Coleção de *skills* agnósticas para o Claude Code — funcionam em **qualquer
 |---|---|---|
 | [`grill-with-docs`](grill-with-docs/) | Entrevista intensiva antes de construir — uma pergunta por vez, capturando o vocabulário do domínio em `CONTEXT.md` e decisões difíceis em ADRs. | `/grill-with-docs` |
 | [`build-loop`](build-loop/) | Projetar um loop de IA autônomo (objetivo + execução + verificação objetiva + iteração) no lugar de prompts manuais repetidos. | `/build-loop` |
+| [`smoke-anchor`](smoke-anchor/) | Provar que algo que você acabou de construir funciona — plantar uma âncora objetiva (oráculo ou marco) e martelar até verde, com parada dura. | `/smoke-anchor` |
 
 ## Como instalar em outra máquina / outro projeto
 
