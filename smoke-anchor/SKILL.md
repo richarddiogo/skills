@@ -47,6 +47,13 @@ Rode a âncora. Vermelho → conserte → rode de novo. Verde → pronto. **Regr
 - **Máx ~3-5 tentativas.** Ao atingir, PARE e pergunte no chat se continua — não itere pra sempre.
 - **Erro repetido = pare antes.** Se o mesmo erro aparece 2-3 vezes, quase sempre a âncora está errada ou a abordagem é beco sem saída. Não martele; investigue ou pergunte.
 - **Loop que nunca fica verde ≠ código ruim.** Antes de iterar, rode a âncora UMA vez à mão e confirme que ela *consegue* ficar verde (seletor certo, build compila). Barreira impossível de satisfazer é pior que barreira nenhuma.
+- **Verifique o verificador.** Um verde de primeira não prova que a âncora presta — âncora fraca também passa. Antes de confiar, confirme que ela fica *vermelha* num input sabidamente quebrado. Verde só conta depois que você viu a âncora reprovar algo.
+
+## Cuidado: a âncora guarda forma, não sentido
+
+Uma âncora-schema confirma que a saída é *bem-formada* — não que está *certa*. Um kanban pode validar 100% no contrato com os cards nas colunas erradas. Schema-verde é **necessário, não suficiente**: cobre estrutura, referências e enums; não cobre se a decisão faz sentido. Para sentido, adicione 2-3 **cenários golden** (input conhecido → forma de saída aceitável) ou LLM-juiz — só depois que o schema estiver verde.
+
+**Em pipeline multi-agente o valor se compõe.** Se cada agente cumpre o contrato 95% das vezes, 30 agentes juntos dão 0,95³⁰ ≈ 21% — ~4 em 5 rodadas têm uma violação em algum lugar. Uma âncora por fronteira faz a falha estourar onde nasceu, com mensagem exata, em vez de aparecer 25 agentes depois. O ganho cresce com o número de agentes; num agente só, é quase overhead.
 
 ## Por que isto é uma skill (e não "a LLM já sabe")
 
