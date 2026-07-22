@@ -40,6 +40,16 @@ Escolha **o menor observável que seria falso se estivesse quebrado** e escreva 
 
 Para oráculos de cálculo, **congele o esperado** num fixture (`fixtures/caso.json` com input + output revisado uma vez por humano), e teste tiers: pequeno (1), médio (5), limite (máx razoável). *Property-based* (Hypothesis) automatiza esses tiers.
 
+## Passo 2.5 — Declare a âncora e confirme (antes de codar)
+
+Quem escreve o código não deve ser o único a definir a barreira — senão controla os dois lados e a âncora vira teatro. Antes de escrever a implementação, declare a âncora em UMA linha e confirme com o humano:
+
+- **Tipo** — oráculo ou marco?
+- **Observável** — qual é o único fato que a âncora checa?
+- **Correto** — qual valor/comportamento conta como certo? Aqui mora o *sentido*: é verdade de negócio que a IA deduz mal. Ex.: o texto é "Olá, Mundo!" ou "Hello"? a prioridade aceita é low/medium/high ou também "urgent"?
+
+Pergunte quando o "correto" envolve regra de negócio, enum, valor esperado ou qualquer coisa que a IA estaria adivinhando. Pule quando for óbvio E de baixo risco (ex.: `soma(2,2) == 4`). Na dúvida, proponha e peça o ok — é uma linha, não um interrogatório. A confirmação vem **antes** de codar; depois, a IA já ancorou na própria suposição e seu ok vira só carimbo.
+
 ## Passo 3 — Martele até verde, com parada dura
 
 Rode a âncora. Vermelho → conserte → rode de novo. Verde → pronto. **Regras da parada** (senão queima token à toa):
